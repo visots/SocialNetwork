@@ -13,13 +13,15 @@ namespace SocialNetwork.BLL.Services
 {
     public class UserService
     {
-        IUserRepository _userRepository;
+        IUserRepository userRepository;
         MessageService messageService;
+        FriendService friendService;
 
         public UserService()
         {
-            _userRepository = new UserRepository();
+            userRepository = new UserRepository();
             messageService = new MessageService();
+            friendService = new FriendService();
         }
 
         public void Register(UserRegistrationData userRegistrationData)
@@ -42,7 +44,7 @@ namespace SocialNetwork.BLL.Services
             if (new EmailAddressAttribute().IsValid(userRegistrationData.Password))
                 throw new ArgumentNullException();
 
-            if (_userRepository.FindByEmail(userRegistrationData.Email) != null)
+            if (userRepository.FindByEmail(userRegistrationData.Email) != null)
                 throw new ArgumentNullException();
 
             var userEntity = new UserEntity()
@@ -53,7 +55,7 @@ namespace SocialNetwork.BLL.Services
                 email = userRegistrationData.Email,
             };
 
-            if (this._userRepository.Create(userEntity) == 0)
+            if (this.userRepository.Create(userEntity) == 0)
                 throw new Exception();
         }
         private User ConstructUserModel(UserEntity userEntity)
@@ -61,6 +63,8 @@ namespace SocialNetwork.BLL.Services
             var incomingMessages = messageService.GetIncomingMessagesByUserId(userEntity.id);
 
             var outgoingMessages = messageService.GetOutcomingMessagesByUserId(userEntity.id);
+
+            var userFriends = friendService.FindAllByUserId(userEntity.id);
 
             return new User(userEntity.id,
                           userEntity.firstname,
@@ -71,13 +75,14 @@ namespace SocialNetwork.BLL.Services
                           userEntity.favorite_movie,
                           userEntity.favorite_book,
                           incomingMessages,
-                          outgoingMessages
+                          outgoingMessages,
+                          userFriends
                           );
         }
 
         public User Authenticate(UserAuthenticationData userAuthenticationData)
         {
-            var findUserEntity = _userRepository.FindByEmail(userAuthenticationData.Email);
+            var findUserEntity = userRepository.FindByEmail(userAuthenticationData.Email);
             if (findUserEntity is null) throw new UserNotFoundException();
 
             if (findUserEntity.password != userAuthenticationData.Password)
@@ -100,13 +105,13 @@ namespace SocialNetwork.BLL.Services
                 favorite_book = user.FavoriteBook
             };
 
-            if (this._userRepository.Update(updatableUserEntity) == 0)
+            if (this.userRepository.Update(updatableUserEntity) == 0)
                 throw new Exception();
         }
 
         public User FindByEmail(string email)
         {
-            var findUserEntity = _userRepository.FindByEmail(email);
+            var findUserEntity = userRepository.FindByEmail(email);
             if (findUserEntity is null) throw new UserNotFoundException();
 
             return ConstructUserModel(findUserEntity);
@@ -114,7 +119,7 @@ namespace SocialNetwork.BLL.Services
 
         public User FindById(int id)
         {
-            var findUserEntity = _userRepository.FindById(id);
+            var findUserEntity = userRepository.FindById(id);
             if (findUserEntity is null) throw new UserNotFoundException();
 
             return ConstructUserModel(findUserEntity);
