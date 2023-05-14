@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SocialNetwork.BLL.Exceptions
 {
-    internal class FriendNotFoundException : Exception
+    internal class FriendsNotFoundException : Exception
     {
     }
 }

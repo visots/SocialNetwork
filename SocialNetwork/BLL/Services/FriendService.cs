@@ -2,11 +2,6 @@
 using SocialNetwork.BLL.Models;
 using SocialNetwork.DAL.Entities;
 using SocialNetwork.DAL.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SocialNetwork.BLL.Services
 {
@@ -31,7 +26,7 @@ namespace SocialNetwork.BLL.Services
                 friends.Add(new Friend(f.id,user.email,friend.email));
             });
 
-            if (friendRepository is null) throw new FriendNotFoundException();
+            if (friendRepository is null) throw new FriendsNotFoundException();
 
             return friends;
         }
