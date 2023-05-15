@@ -18,7 +18,6 @@ namespace SocialNetwork.PLL.Views
         {
             var friendService = new FriendService();
 
-            Console.WriteLine("Друзья:");
             Console.WriteLine("\tПросмотреть список друзей (нажмите 1)");
             Console.WriteLine("\tДобавить в друзья (нажмите 2)");
 
@@ -35,10 +34,10 @@ namespace SocialNetwork.PLL.Views
                             var firends = friendService.FindAllByUserId(user.Id);
                             foreach (var firend in firends)
                                 Console.WriteLine(firend.FriendEmail);
-                            
+
                             Console.WriteLine();
                         }
-                        catch(FriendsNotFoundException)
+                        catch (FriendsNotFoundException)
                         {
                             AlertMessage.Show("Друзья не найдены");
                         }
