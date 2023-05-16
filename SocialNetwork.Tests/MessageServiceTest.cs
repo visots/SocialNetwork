@@ -2,6 +2,9 @@
 using SocialNetwork.BLL.Models;
 using SocialNetwork.BLL.Services;
 using SocialNetwork.BLL.Exceptions;
+using Moq;
+using SocialNetwork.DAL.Repositories;
+using SocialNetwork.DAL.Entities;
 
 namespace SocialNetwork.Tests
 {
